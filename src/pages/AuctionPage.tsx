@@ -1,8 +1,9 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import VinylDisc from '../components/VinylDisc';
+import { analytics } from '../analytics';
 import Timer from '../components/Timer';
 
 const conditionColor: Record<string, string> = {
@@ -30,6 +31,13 @@ export default function AuctionPage() {
   const [bidAmount, setBidAmount] = useState('');
   const [bidError, setBidError] = useState('');
   const [bidSuccess, setBidSuccess] = useState(false);
+  const viewTracked = useRef(false);
+
+  useEffect(() => {
+    if (!auction || !record || viewTracked.current) return;
+    viewTracked.current = true;
+    analytics.viewAuction(auction.id, auction.type, record.artist, record.title, auction.startPrice);
+  }, [auction, record]);
 
   useEffect(() => {
     if (!auction || auction.type !== 'dutch' || auction.status !== 'active') return;
@@ -60,6 +68,7 @@ export default function AuctionPage() {
   const handleBuyNow = () => {
     if (!user) { navigate('/login'); return; }
     buyNow(auction.id, user.id);
+    analytics.buyNow(auction.id, currentPrice, record.artist, record.title);
     navigate(`/payment/${auction.id}`);
   };
 
@@ -73,6 +82,7 @@ export default function AuctionPage() {
     }
     const ok = placeBid(auction.id, user.id, amount);
     if (ok) {
+      analytics.placeBid(auction.id, amount, record.artist, record.title);
       setBidSuccess(true);
       setBidError('');
       setBidAmount('');

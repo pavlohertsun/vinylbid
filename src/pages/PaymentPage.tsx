@@ -1,7 +1,8 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { useParams, Navigate, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
+import { analytics } from '../analytics';
 
 function luhn(num: string): boolean {
   const digits = num.replace(/\D/g, '');
@@ -46,6 +47,13 @@ export default function PaymentPage() {
   const [name, setName] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const checkoutTracked = useRef(false);
+
+  useEffect(() => {
+    if (!auction || !record || checkoutTracked.current) return;
+    checkoutTracked.current = true;
+    analytics.beginCheckout(auction.id, auction.finalPrice ?? 0);
+  }, [auction, record]);
 
   if (!user) return <Navigate to="/login" />;
   if (!auction || !record) {
@@ -78,6 +86,7 @@ export default function PaymentPage() {
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
+    analytics.purchase(auction.id, auction.finalPrice ?? 0, record.artist, record.title);
     setSuccess(true);
     setTimeout(() => navigate('/profile'), 3000);
   };
