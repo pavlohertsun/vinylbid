@@ -3,9 +3,12 @@ import mixpanel from 'mixpanel-browser';
 const TOKEN = '774b951bae72d9f0a75125693dda3bc8'; // замінити на свій токен з mixpanel.com
 
 mixpanel.init(TOKEN, {
-  debug: import.meta.env.DEV,        // логи в консолі лише в dev-режимі
-  track_pageview: false,             // вимкнено — керуємо вручну через PageTracker
+  debug: import.meta.env.DEV,
+  track_pageview: false,            // вимкнено — керуємо вручну через PageTracker
   persistence: 'localStorage',
+  api_host: 'https://api-eu.mixpanel.com',  // EU data residency
+  autocapture: true,                // автоматичний захват кліків і форм
+  record_sessions_percent: 100,     // запис всіх сесій
 });
 
 export const mp = {
