@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { analytics } from '../analytics';
 import { mp } from '../mixpanel';
+import { amp } from '../amplitude';
 
 function luhn(num: string): boolean {
   const digits = num.replace(/\D/g, '');
@@ -55,6 +56,7 @@ export default function PaymentPage() {
     checkoutTracked.current = true;
     analytics.beginCheckout(auction.id, auction.finalPrice ?? 0);
     mp.beginCheckout(auction.id, auction.finalPrice ?? 0);
+    amp.beginCheckout(auction.id, auction.finalPrice ?? 0);
   }, [auction, record]);
 
   if (!user) return <Navigate to="/login" />;
@@ -90,6 +92,7 @@ export default function PaymentPage() {
     if (Object.keys(errs).length > 0) return;
     analytics.purchase(auction.id, auction.finalPrice ?? 0, record.artist, record.title);
     mp.purchase(auction.id, auction.finalPrice ?? 0, record.artist, record.title);
+    amp.purchase(auction.id, auction.finalPrice ?? 0, record.artist, record.title);
     setSuccess(true);
     setTimeout(() => navigate('/profile'), 3000);
   };
