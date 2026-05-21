@@ -1,6 +1,6 @@
 import mixpanel from 'mixpanel-browser';
 
-const TOKEN = 'MIXPANEL_PROJECT_TOKEN'; // замінити на свій токен з mixpanel.com
+const TOKEN = '774b951bae72d9f0a75125693dda3bc8'; // замінити на свій токен з mixpanel.com
 
 mixpanel.init(TOKEN, {
   debug: import.meta.env.DEV,        // логи в консолі лише в dev-режимі
