@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { analytics } from '../analytics';
-import { mp } from '../mixpanel';
-import { amp } from '../amplitude';
 import AuctionCard from '../components/AuctionCard';
 import type { AuctionType, AuctionStatus } from '../types';
 
@@ -44,7 +41,7 @@ export default function CatalogPage() {
         <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6 flex flex-wrap gap-4 items-center">
           <input
             type="text" placeholder="Пошук за виконавцем або назвою..."
-            value={search} onChange={e => { setSearch(e.target.value); if (e.target.value.length > 2) { analytics.search(e.target.value); mp.search(e.target.value, filtered.length); amp.search(e.target.value, filtered.length); } }}
+            value={search} onChange={e => { setSearch(e.target.value); }}
             className="flex-1 min-w-48 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
           />
 
@@ -52,7 +49,7 @@ export default function CatalogPage() {
             {([['all', 'Всі'], ['dutch', 'Голландський'], ['vickrey', 'Vickrey']] as const).map(([val, label]) => (
               <button
                 key={val}
-                onClick={() => { setTypeFilter(val as typeof typeFilter); analytics.filterCatalog('auction_type', val); mp.filterCatalog('auction_type', val); amp.filterCatalog('auction_type', val); }}
+                onClick={() => { setTypeFilter(val as typeof typeFilter); }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   typeFilter === val ? 'bg-black text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
@@ -77,7 +74,7 @@ export default function CatalogPage() {
           </div>
 
           <select
-            value={genre} onChange={e => { setGenre(e.target.value); analytics.filterCatalog('genre', e.target.value); mp.filterCatalog('genre', e.target.value); amp.filterCatalog('genre', e.target.value); }}
+            value={genre} onChange={e => { setGenre(e.target.value); }}
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-gray-400 bg-white"
           >
             {GENRES.map(g => <option key={g}>{g}</option>)}

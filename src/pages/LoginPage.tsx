@@ -1,8 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { analytics } from '../analytics';
-
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -17,8 +15,6 @@ export default function LoginPage() {
     if (!success) {
       setError('Неправильний email або пароль');
     } else {
-      const loggedUser = [{ email: 'admin@vinylbid.com', role: 'admin' }, { email: 'john@mail.com', role: 'seller' }, { email: 'maria@mail.com', role: 'seller' }, { email: 'alex@mail.com', role: 'buyer' }, { email: 'kate@mail.com', role: 'buyer' }].find(u => u.email === email);
-      analytics.login(loggedUser?.role ?? 'buyer');
       navigate('/catalog');
     }
   };

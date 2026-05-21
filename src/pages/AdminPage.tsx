@@ -2,10 +2,6 @@ import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
-import { analytics } from '../analytics';
-import { mp } from '../mixpanel';
-import { amp } from '../amplitude';
-
 export default function AdminPage() {
   const { user, users } = useAuth();
   const { lots, auctions, records, bids, approveLot, rejectLot, resetAll } = useApp();
@@ -35,9 +31,6 @@ export default function AdminPage() {
   const handleReject = (lotId: number) => {
     if (!rejectReason.trim()) return;
     rejectLot(lotId, rejectReason);
-    analytics.moderateLot(lotId, 'reject');
-    mp.moderateLot(lotId, 'reject');
-    amp.moderateLot(lotId, 'reject');
     setRejectId(null);
     setRejectReason('');
   };
@@ -140,7 +133,7 @@ export default function AdminPage() {
 
                     <div className="flex flex-col gap-2 shrink-0">
                       <button
-                        onClick={() => { approveLot(lot.id); analytics.moderateLot(lot.id, 'approve'); mp.moderateLot(lot.id, 'approve'); amp.moderateLot(lot.id, 'approve'); }}
+                        onClick={() => { approveLot(lot.id); }}
                         className="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
                       >
                         Схвалити

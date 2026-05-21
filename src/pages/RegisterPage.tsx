@@ -1,8 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { analytics } from '../analytics';
-
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -15,7 +13,6 @@ export default function RegisterPage() {
     if (!register(form.name, form.email, form.password, form.role)) {
       setError('Цей email вже зареєстровано');
     } else {
-      analytics.signUp(form.role);
       navigate('/catalog');
     }
   };
