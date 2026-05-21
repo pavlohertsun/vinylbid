@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { analytics } from '../analytics';
+import { mp } from '../mixpanel';
 
 const PAGE_TITLES: Record<string, string> = {
   '/': 'Головна',
@@ -21,6 +22,7 @@ export default function PageTracker() {
       (location.pathname.startsWith('/auction/') ? 'Аукціон' :
        location.pathname.startsWith('/payment/') ? 'Оплата' : 'VinylBid');
     analytics.pageView(location.pathname, title);
+    mp.pageView(location.pathname, title);
   }, [location.pathname]);
 
   return null;

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { User } from '../types';
 import { INITIAL_USERS } from '../data/mockData';
+import { mp } from '../mixpanel';
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (found) {
       setUser(found);
       localStorage.setItem('vinylbid_user', String(found.id));
+      mp.login(found.id, found.name, found.email, found.role);
       return true;
     }
     return false;
@@ -33,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('vinylbid_user');
+    mp.reset();
   };
 
   const register = (name: string, email: string, password: string, role: 'buyer' | 'seller'): boolean => {
@@ -46,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsers(prev => [...prev, newUser]);
     setUser(newUser);
     localStorage.setItem('vinylbid_user', String(newUser.id));
+    mp.signUp(newUser.id, newUser.name, newUser.email, newUser.role);
     return true;
   };
 

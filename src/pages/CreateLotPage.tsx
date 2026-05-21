@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { analytics } from '../analytics';
+import { mp } from '../mixpanel';
 import type { GoldmineCondition, VinylFormat, AuctionType } from '../types';
 
 const CONDITIONS: GoldmineCondition[] = ['M', 'NM', 'VG+', 'VG', 'G+', 'G', 'F', 'P'];
@@ -48,6 +49,7 @@ export default function CreateLotPage() {
       sellerId: user.id,
     });
     analytics.createLot(form.auctionType);
+    mp.createLot(form.auctionType);
     setSubmitted(true);
     setTimeout(() => navigate('/profile'), 2000);
   };
